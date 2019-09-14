@@ -10,6 +10,7 @@ cap = cv2.VideoCapture(0)
 fgbg = cv2.createBackgroundSubtractorMOG2()
 
 record = False
+imgs = 0
 
 while(True):
     # Capture frame-by-frame
@@ -30,7 +31,9 @@ while(True):
         pass  # if user pressed a key other than the given key the loop will break
 
     if record:
-        print('Recording')
+        imgs += 1
+        if imgs % 100 == 0:
+            print(f'Recording, number of images: {imgs}')
         cv2.imwrite(IMG_FLDR + str(datetime.datetime.now()) + '.jpg', thresh1)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
