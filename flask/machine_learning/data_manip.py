@@ -3,8 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import datetime
 import keyboard
+from PIL import Image
 
-IMG_FLDR = 'data/test/'
+IMG_FLDR = './data/gesture-7/'
 
 cap = cv2.VideoCapture(0)
 fgbg = cv2.createBackgroundSubtractorMOG2()
@@ -16,14 +17,19 @@ while(True):
     # Capture frame-by-frame
     ret, frame = cap.read()
     fgmask = fgbg.apply(frame)
-    ret2, thresh1 = cv2.threshold(fgmask, 127, 255, cv2.THRESH_BINARY)
+    ret2, thresh1 = cv2.threshold(fgmask, 125, 255, cv2.THRESH_BINARY)
+    thresh1 = thresh1.T
 
-    cv2.imshow('fgmask', frame)
-    cv2.imshow('frame', thresh1)
+    thresh = cv2.resize(thresh1, (438, 780))
+    cv2.imshow('fgmask', thresh)
 
 
     try:  # used try so that if user pressed other than the given key error will not be shown
         if keyboard.is_pressed('s'):  # if key 'q' is pressed
+            if not record:
+                print('\nStart Recording!')
+            else:
+                print('\nStop Recording!')
             record = not record
         else:
             pass
