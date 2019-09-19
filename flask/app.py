@@ -1,4 +1,5 @@
-from machine_learning.model import return_hello
+from machine_learning.clean_img import clean_image
+from tensorflow.keras.models import load_model
 
 from flask import Flask
 from flask import request, Response
@@ -14,17 +15,18 @@ def hello_world():
         print(encodedMessage)
 
         byteArray = encodedMessage['byteArray']
+        print("BYTE ARRAY", byteArray)
 
-        print(byteArray)
+        numpy_array = clean_image(byteArray)
 
-        decodedMessage = base64.b64decode(byteArray)
+        model = load_model('machine_learning/model/2019-09-15 11_55_30.484543.h5')
+        class_pred = model.predict(numpy_array)
 
-        # send decoded model, return data
+        hand_gesture = classes_list[class_pred]
 
-        return decodedMessage
+        return json.dumps(hand_gesture)
     
     elif request.method == 'GET':
-        return_hello()
         return 'Hello, World!'
 
 app.run(host="0.0.0.0", port=5000)
